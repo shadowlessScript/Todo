@@ -1,4 +1,7 @@
 // deals with showing the todo list of the project selected
+import { generateFields, populateFields } from "./generateFields"
+import { currentProject } from "./mainPage"
+
 // TODO: - If todoList isEmpty then show "No task added"
 //      - if they exist, show the task.
 //      - Include a form for adding new tasks.
@@ -29,6 +32,7 @@ function createTodoItems(container, project) {
         {
             let projectTodoList = project.todoList[i]
             const todo = document.createElement("div")
+            todo.classList.add("user-task")
             const todoTitle = document.createElement("h4")
             todoTitle.textContent = projectTodoList.title
             const todoDescription = document.createElement("p");
@@ -41,12 +45,29 @@ function createTodoItems(container, project) {
             
             todo.append(
                 todoTitle,
-                todoDescription,
-                todoPriority,
+                // todoDescription,
+                // todoPriority,
                 todoDueDate
             )
             container.append(todo)
+
+            todo.addEventListener("click", (e) => {
+                let ind = Array.prototype.indexOf.call(container.children, todo) - 1;// minus 1 because it is been offset by the title-container child 
+                let form = document.querySelector(".todolist-form")
+                form.replaceChildren();
+                generateFields(form, [
+                        { type: "text", label: "title" },
+                        { type: "TEXTAREA", label: "description" },
+                        { type: "date", label: "DueDate" },
+                        { type: "text", label: "priority" },                        
+                ],
+                    true
+                )
+                populateFields(currentProject.project.todoList[ind]);
+                console.log(ind, currentProject.project.todoList[ind], form)
+            });
         }
+         
     } else
     {
         container.append(
@@ -69,6 +90,7 @@ function Container(project) {
 
     createTodoItems(container, project)
 
+    currentProject.project = project
     return container
 }
 

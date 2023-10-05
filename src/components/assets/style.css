@@ -1,7 +1,13 @@
+@font-face {
+    font-family: roboto;
+    src: url("./Roboto-Regular.ttf");
+}
+
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: "roboto";
 }
 
 body{
@@ -9,12 +15,18 @@ body{
     height: 100%;
 }
 
+.main-container{
+    height: 100vh;
+}
+.main-page-container{
+    display: grid;
+    height: 100%;
+    grid-template-columns: 0.3fr 1fr 0.5fr;
+    grid-template-rows: 1fr;
+}
+
 .project-list{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-self:center;
-    margin-top: 10px;
+    
     border: 1px solid black;
     
     border-radius: 5px;
@@ -27,7 +39,7 @@ body{
     background-color: bisque;
     text-align: center;
     border-radius: 0.7rem;
-    padding: 4%;
+    /* padding: 4%; */
     transition: 0.4s;
     margin: 12px
     /* transition: color 0.4s; */
@@ -60,9 +72,9 @@ body{
 }
 
 .add-project-btn,.close-form-btn{
-    position: absolute;
+    /* position: absolute;
     left: 2%;
-    top: 5%;
+    top: 5%; */
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -88,3 +100,68 @@ body{
     
 }
 
+.todolist-form{
+    display: flex;
+    flex-direction: column;
+    border: 2px solid brown;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+/* background-image: linear-gradient(to right top, #fcf8ff, #e5cbf9, #ce9ef1, #b670e7, #9d3cdc);*/
+}
+
+.todo-container{
+    border: 2px dashed saddlebrown;
+    /* width: 50%; */
+    /* height: 100vh; */
+}
+
+.todolist-form > input, textarea{
+    /* border: none; */
+    /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+/* .todolist-form > label{
+    color: white;
+} */
+.todolist-form > input{
+    /* padding: 10px; */
+    height: 35px;   
+    border-radius: 5px;
+}
+
+.submit-btn{
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #008F7A;
+    color: white;
+}
+
+.add-task-img{
+    width: 48px;
+    height: 48px;
+    margin-bottom: 10px;
+}
+
+.section-title{
+    margin-bottom: 10px;
+
+}
+
+.title-container{
+    text-align:center;
+}
+
+.user-task{
+    display: flex;
+    height: 50px;
+    background-color: #ddd6fe;
+    margin: 10px;
+    border-radius: 5px; 
+}
+
+.user-task:hover{
+    cursor: pointer
+}

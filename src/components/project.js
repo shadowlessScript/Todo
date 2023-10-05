@@ -42,8 +42,8 @@ if (projectsContainer.length === 0)
 (
     function () {
         let proj = new Project("Construction");
-        proj.addTask(new TodoList("Go to work", "...", 2, "12-3-2021"))
-        proj.addTask(new TodoList("Go to work!", "...", 2, "12-3-2021"));
+        proj.addTask(new TodoList("Go to work", "...", 2, "2021-3-12"))
+        proj.addTask(new TodoList("Go to work!", "...", 2, "2021-3-12"));
         addProject(proj);
         console.dir(projectsContainer)
     }

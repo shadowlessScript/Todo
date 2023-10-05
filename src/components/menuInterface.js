@@ -7,6 +7,7 @@ const projectListDisplay = document.createElement("div")
 projectListDisplay.classList.add("project-list");
 const projectsHolder = document.createElement("div")
 projectsHolder.classList.add("project-holder")
+
 export default function menuInterface() {    
     // TODO: Put the add project btn in a different div 
 

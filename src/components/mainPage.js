@@ -3,6 +3,11 @@ import userProject from "./todoLandingPage";
 import { projectsContainer } from "./project";
 import todoListForm from "./todoListForm";
 
+
+let currentProject = {
+    project: projectsContainer[0]
+} // Will the used when creating a todo list, because it has to be contained in a spefic project
+
 export default function mainPage() {
     const mainPageContainer = document.createElement("div");
     mainPageContainer.classList.add("main-page-container");
@@ -14,4 +19,8 @@ export default function mainPage() {
     )
 
     return mainPageContainer
+}
+
+export {
+    currentProject 
 }
