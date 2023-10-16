@@ -21,25 +21,25 @@ body{
 .main-page-container{
     display: grid;
     height: 100%;
-    grid-template-columns: 0.3fr 1fr 0.5fr;
+    grid-template-columns: repeat( auto-fit, minmax(500px, 1fr ) );
     grid-template-rows: 1fr;
 }
 
 .project-list{
     
     border: 1px solid black;
-    
+    /* width: 200px; */
     border-radius: 5px;
     padding: 15px;
 }
 
 .project-link{
-    /* width: 100px;
-    height: 100px; */
+    /* width: 100px; */
+    height: 30px;
     background-color: bisque;
     text-align: center;
-    border-radius: 0.7rem;
-    /* padding: 4%; */
+    border-radius: 0.2rem;
+    padding: 4px;
     transition: 0.4s;
     margin: 12px
     /* transition: color 0.4s; */
@@ -55,26 +55,17 @@ body{
 }
 
 .add-new-project-form{
-    background-color: aliceblue;
-    width: 40%;
+    width: 70%;
     height: 20%;
 }
 
 .form-container{
-    background-color: rgba(26, 25, 25, 0.7);
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.add-project-btn,.close-form-btn{
-    /* position: absolute;
-    left: 2%;
-    top: 5%; */
+.open-form-btn, .close-form-btn{
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -82,9 +73,12 @@ body{
         transform, box-shadow, 0.4s;
 }
 .close-form-btn{
-    z-index: 12;
+    width: 30px;
+    height: 30px;
+    margin-bottom: -10px;
+    margin-left: 15px;
 }
-.add-project-btn:hover{
+.open-form-btn:hover{
     transform: scale(1.1);
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     transition: 
@@ -98,6 +92,18 @@ body{
     transition: 
         transform, box-shadow, 0.4s;
     
+}
+.add-project-btn{
+    border: none;
+    padding: 10px;
+    margin-left: 5px;
+    background-color: #a3e635;
+    color: black;
+    font-weight: 600;
+}
+
+.add-project-btn:hover{
+    cursor: pointer;
 }
 
 .todolist-form{
@@ -164,4 +170,81 @@ body{
 
 .user-task:hover{
     cursor: pointer
+}
+
+.cancle-btn{
+    margin: 10px;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #ef4444;
+    color: white;
+}
+
+.project-name-input{
+    padding: 5px;
+    border-radius: .5rem;
+}
+
+.project-name-input:focus{
+    outline-color: #fb923c;
+}
+
+.project-link-container{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.delete-project:hover{
+    cursor: pointer;    
+}
+
+.msg-container{
+    position: absolute;
+    top: 30%;
+    left: 35%;
+    width: 30%;
+    height: 30%;
+    background-color: antiquewhite;
+    text-align: center;
+}
+
+.notify{
+    position: absolute;
+    top: 1%;
+    right: 40%;
+    width: 300px;
+    height: 30px;
+    background-color: #a3e635;
+    animation:notification 1.5s both;
+    transition: ease-in-out 0.2s;
+
+}
+
+.complete-task-div{
+    padding: 15px;
+}
+
+.task-completed{
+    margin-left: 30px;
+    width:fit-content;
+    padding:2px;
+    border-radius: 3px;
+}
+
+.task-completed:hover{
+    background-color: rgb(216, 212, 212);
+}
+
+.complete-items{
+    margin-bottom: 10px;
+}
+
+@keyframes notification {
+    from{
+        height:0px;
+        font-size: 0;
+    }
+    to{height: 30px; font-size: inherit;}
 }

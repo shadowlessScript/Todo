@@ -1,14 +1,15 @@
 // deals with showing the todo list of the project selected
-import { generateFields, populateFields } from "./generateFields"
 import { currentProject } from "./mainPage"
+import createComponent from "./elements"
+import { updateStorage } from "./localStorageHandler"
+import { projectsContainer } from "./project"
+import message from "./message"
+import { createTodoItems } from "./createTodoItems"
 
-// TODO: - If todoList isEmpty then show "No task added"
-//      - if they exist, show the task.
-//      - Include a form for adding new tasks.
 const todoContainer = document.createElement("div")
 todoContainer.classList.add("todo-container")
-
-export default function userProject(project) { 
+let taskSelected;
+export default function userProject(project, ind) { 
     //project, is an object in the form:
     // {
     //  todoList:[
@@ -18,83 +19,102 @@ export default function userProject(project) {
     //}
 
     
-    todoContainer.append(Container(project))
+    todoContainer.append(Container(project, ind))
     
     
     return todoContainer
 }
 
-function createTodoItems(container, project) {
-    // makes todo divs for each todo item and appends it to the container
-    if (project.todoList.length > 0)
-    {
-        for (let i = 0; i < project.todoList.length; i++) 
-        {
-            let projectTodoList = project.todoList[i]
-            const todo = document.createElement("div")
-            todo.classList.add("user-task")
-            const todoTitle = document.createElement("h4")
-            todoTitle.textContent = projectTodoList.title
-            const todoDescription = document.createElement("p");
-            todoDescription.textContent = projectTodoList.description;
-            const todoPriority = document.createElement("h5")
-            todoPriority.textContent = projectTodoList.priority
-            const todoDueDate = document.createElement("p")
-            todoDueDate.textContent = projectTodoList.dueDate
-            
-            
-            todo.append(
-                todoTitle,
-                // todoDescription,
-                // todoPriority,
-                todoDueDate
-            )
-            container.append(todo)
-
-            todo.addEventListener("click", (e) => {
-                let ind = Array.prototype.indexOf.call(container.children, todo) - 1;// minus 1 because it is been offset by the title-container child 
-                let form = document.querySelector(".todolist-form")
-                form.replaceChildren();
-                generateFields(form, [
-                        { type: "text", label: "title" },
-                        { type: "TEXTAREA", label: "description" },
-                        { type: "date", label: "DueDate" },
-                        { type: "text", label: "priority" },                        
-                ],
-                    true
-                )
-                populateFields(currentProject.project.todoList[ind]);
-                console.log(ind, currentProject.project.todoList[ind], form)
-            });
-        }
-         
-    } else
-    {
-        container.append(
-            document.createElement("p").textContent=`${project.projectName} project is Empty`
-        )
-    }
-}
-
-
-function Container(project) {
+function Container(project, projIndex) {
+    currentProject.project = project 
+    currentProject.index = projIndex
     const projectNameContainer = document.createElement("div") //--> append to todoContainer
     projectNameContainer.classList.add("title-container");
     const container = document.createElement("div")
     container.classList.add("container")
 
     const title = document.createElement("h3"); // + to projectNameContainer
-    title.textContent = project.projectName
+    title.classList.add("project-title")
+    title.textContent = project._projectName
     projectNameContainer.appendChild(title);
     container.append(projectNameContainer);    
+    let isrenameActive = false; // prevent recursion of the rename input field
+    let cancleActived = false;  // prevent recursion of the rename input field
+    projectNameContainer.addEventListener("click", () => {
 
+        // TODO: Put this in the renameProject function
+        if (!isrenameActive)
+        {            
+            // without the if statement, the process becomes infinitely recursive whenever the cancle, rename or input field is clicked
+            // i think, the above mentioned fields inherit the event listener for projectNameContainer.
+
+            const renameProjectInputField = document.createElement("input")
+            renameProjectInputField.value = project._projectName
+            const cancleRename = createComponent("button", "cancle-rename", "cancle")
+            
+            cancleRename.addEventListener("click", () => {
+                projectNameContainer.replaceChildren()
+                projectNameContainer.append(title)
+                cancleActived = true;
+                console.log(renameProjectInputField.value)
+
+            });
+            const approveRename = createComponent("button", "approve-rename", "rename")
+            approveRename.addEventListener("click", () => {
+                let ind = projectsContainer.indexOf(project) + 1; // plus one because of the `#text` childNode -> Projects.
+                project._projectName = renameProjectInputField.value;
+                const v = document.querySelector(".project-holder")
+                v.childNodes[ind].childNodes[0].textContent = renameProjectInputField.value;
+                //      ^^^^
+                //      ||||
+                //<div projectHolder>
+                // #text childNode, which is  "Projects"
+                //<div>
+                    //div.project-link[childNodes[0]] && delete Icon[childNodes[1]]
+                //</div > < --- this corresponds to the index of the project
+                //</div >
+                title.textContent = renameProjectInputField.value;
+                updateStorage();
+                projectNameContainer.replaceChildren()
+                projectNameContainer.append(title)
+                cancleActived = true;
+                message(`Rename successful`, "create");
+                let containerChildren = document.querySelector(".container").childNodes
+                // console.log(containerChildren[1])
+                if (containerChildren[1].nodeName === "#text")
+                {
+                    /**
+                     * When the project has no task, the div.container contains:
+                     *  - div.title-container
+                     *  - text, saying "<project name> is empty" 
+                     * The text when rendered has a nodeName -> '#text', 
+                     * This is what is used to determine whether the interface loaded, is showing any tasks or not.
+                     * The tasks will be in div.user-task (this can be multiple). 
+                     * ->This if statement allows for the project name to change in containerChildren[1] (text), after rename without need for refreshing the page.             
+                     */
+                    container.childNodes[1].textContent = `${renameProjectInputField.value} project is empty`
+                }
+            });
+            projectNameContainer.removeChild(title)
+            projectNameContainer.append(renameProjectInputField, cancleRename, approveRename)
+            isrenameActive = true;
+        } else if (isrenameActive && cancleActived)
+        {
+            isrenameActive = false;
+            cancleActived = false;        
+        }
+    });
+    
     createTodoItems(container, project)
 
-    currentProject.project = project
+    
     return container
 }
+
+
 
 export {
     todoContainer,
     Container,
+    taskSelected,
 }
