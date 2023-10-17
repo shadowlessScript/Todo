@@ -61,6 +61,10 @@ function createProjectLabel (project) {
     return projectLinkContainer
 }
 
+/** Appends to the body a dialog, asking whether to delete a project or not.
+ * Upon confirmation, the project link is removed for UI, and from the localStorage.
+ * @param {class} project
+ */
 function deleteProjectDialog(project) {
     let bodyChildren = document.querySelector("body")
 
@@ -111,30 +115,41 @@ function arrayRemove(arr, value) {
 
 }
 
-function updatetasksAccomplished() {
-    let completedTasksDiv = document.querySelector(".complete-task-div")
-    if (completedTasksDiv.children)
-    {
-        completedTasksDiv.replaceChildren();
-    }
-    for (const project in completedTasks)
-    {
-       
-        const relatedProject = createComponent("ul", "complete-items", `${project}`);
-        completedTasks[project].map(function (item) { // item is a todo List object
-            const taskCompleted = createComponent("li", "task-completed", `${item.title}`);
-            relatedProject.append(taskCompleted);
-        });
-        completedTasksDiv.append(relatedProject)
-    }
-    document.querySelector(".project-list").append(completedTasksDiv);
-}
 
+/**
+ * Used to show the div.complete-task-div, 
+ * comprising of completed tasks, and their parent project.
+ * The Last child of the div.project-list.
+  */
 function renderCompletedTasks() {
     const completedTasksDiv = document.createElement("div");
     completedTasksDiv.classList.add("complete-task-div");
+    const titleCon = document.createElement("div")
+    const containerName = document.createElement("h2")
+    containerName.textContent = "Completed Tasks"
+
+    const expandBtn = document.createElement("button");
+    expandBtn.textContent = "show";
+    expandBtn.addEventListener("click", (e) => {
+        expandCollapse(expandBtn.textContent)
+        if (expandBtn.textContent === "hide")
+        {
+            expandBtn.textContent = "show";
+        } else
+        {
+            expandBtn.textContent = "hide"
+        }
+        
     
-    completedTasksDiv.innerHTML = "<h2> Completed Tasks</h2>";
+    });
+
+    titleCon.append(containerName, expandBtn)
+    completedTasksDiv.append(titleCon)
+    const completedItemCon = document.createElement("div");
+    completedItemCon.classList.add("completed-tasks-container");
+    completedItemCon.style.height = "0px";
+    completedItemCon.style.width = "max-content";
+    completedItemCon.style.overflow = "hidden";
     for (const project in completedTasks)
     {
        
@@ -142,11 +157,12 @@ function renderCompletedTasks() {
         completedTasks[project].map(function (item) { // item is a todo List object
             const taskCompleted = createComponent("li", "task-completed", `${item.title}`);
             relatedProject.append(taskCompleted);
+            completedItemCon.append(relatedProject)
         });
-        completedTasksDiv.append(relatedProject)
+        completedTasksDiv.append(completedItemCon)
     }
-    let title = projectListDisplay.lastChild.childNodes[0].innerHTML
-    if (title === completedTasksDiv.childNodes[0].innerHTML)
+    let title = projectListDisplay.lastChild.childNodes[0].textContent
+    if (title === completedTasksDiv.childNodes[0].textContent)
     {
         projectListDisplay.replaceChild(completedTasksDiv, projectListDisplay.lastChild)
     } else
@@ -155,10 +171,25 @@ function renderCompletedTasks() {
     }
 }
 
+function expandCollapse(state) {
+    const v = document.querySelector(".completed-tasks-container");
+    if (state === "show")
+    {        
+        v.style.height = "400px";
+        v.classList.add("completed-tasks-container-br");
+        v.style.overflowY = "scroll";
+    } else
+    {
+        v.style.height = "0px";
+        v.classList.remove("completed-tasks-container-br");
+        v.style.overflow = "hidden";
+    }
+    
+}
+
 export {
     loadProjects,
     reloadProjects,
-    updatetasksAccomplished,
     arrayRemove,
     renderCompletedTasks,
 }
